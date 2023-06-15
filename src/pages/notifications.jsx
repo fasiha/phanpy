@@ -19,6 +19,7 @@ import niceDateTime from '../utils/nice-date-time';
 import shortenNumber from '../utils/shorten-number';
 import states, { saveStatus } from '../utils/states';
 import { getCurrentInstance } from '../utils/store-utils';
+import useOnlyMentions from '../utils/useOnlyMentions';
 import useScroll from '../utils/useScroll';
 import useTitle from '../utils/useTitle';
 
@@ -30,7 +31,7 @@ function Notifications() {
   const snapStates = useSnapshot(states);
   const [uiState, setUIState] = useState('default');
   const [showMore, setShowMore] = useState(false);
-  const [onlyMentions, setOnlyMentions] = useState(false);
+  const [onlyMentions, setOnlyMentions] = useOnlyMentions();
   const scrollableRef = useRef();
   const { nearReachEnd, scrollDirection, reachStart, nearReachStart } =
     useScroll({

@@ -51,3 +51,10 @@ export function getCurrentInstance() {
     return {};
   }
 }
+
+export function getOnlyMentions() {
+  return store.local.getJSON('onlyMentions');
+}
+export function persistOnlyMentions(newValue) {
+  store.local.setJSON('onlyMentions', newValue);
+}
