@@ -183,6 +183,11 @@ function NotificationsMenu({ anchorRef, state, onClose }) {
           <>
             {snapStates.notifications
               .slice(0, NOTIFICATIONS_DISPLAY_LIMIT)
+              .filter((notification) =>
+                snapStates.settings.onlyMentions
+                  ? notification.type === 'mention'
+                  : true,
+              )
               .map((notification) => (
                 <Notification
                   key={notification.id}

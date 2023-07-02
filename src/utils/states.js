@@ -41,6 +41,7 @@ const states = proxy({
   shortcuts: store.account.get('shortcuts') ?? [],
   // Settings
   settings: {
+    onlyMentions: store.account.get('settings-onlyMentions') ?? false,
     autoRefresh: store.account.get('settings-autoRefresh') ?? false,
     shortcutsViewMode: store.account.get('settings-shortcutsViewMode') ?? null,
     shortcutsColumnsMode:
@@ -67,6 +68,9 @@ subscribeKey(states, 'notificationsLast', (v) => {
 subscribe(states, (changes) => {
   console.debug('STATES change', changes);
   for (const [action, path, value, prevValue] of changes) {
+    if (path.join('.') === 'settings.onlyMentions') {
+      store.account.set('settings-onlyMentions', !!value);
+    }
     if (path.join('.') === 'settings.autoRefresh') {
       store.account.set('settings-autoRefresh', !!value);
     }

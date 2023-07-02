@@ -31,7 +31,6 @@ function Notifications() {
   const snapStates = useSnapshot(states);
   const [uiState, setUIState] = useState('default');
   const [showMore, setShowMore] = useState(false);
-  const [onlyMentions, setOnlyMentions] = useState(false);
   const scrollableRef = useRef();
   const { nearReachEnd, scrollDirection, reachStart, nearReachStart } =
     useScroll({
@@ -203,7 +202,11 @@ function Notifications() {
         isHovering.current = false;
       }}
     >
-      <div class={`timeline-deck deck ${onlyMentions ? 'only-mentions' : ''}`}>
+      <div
+        class={`timeline-deck deck ${
+          snapStates.settings.onlyMentions ? 'only-mentions' : ''
+        }`}
+      >
         <header
           hidden={hiddenUI}
           onClick={(e) => {
@@ -331,9 +334,9 @@ function Notifications() {
           <label>
             <input
               type="checkbox"
-              checked={onlyMentions}
+              checked={snapStates.settings.onlyMentions}
               onChange={(e) => {
-                setOnlyMentions(e.target.checked);
+                states.settings.onlyMentions = e.target.checked;
               }}
             />{' '}
             Only mentions
@@ -348,7 +351,10 @@ function Notifications() {
         {snapStates.notifications.length ? (
           <>
             {snapStates.notifications.map((notification) => {
-              if (onlyMentions && notification.type !== 'mention') {
+              if (
+                snapStates.settings.onlyMentions &&
+                notification.type !== 'mention'
+              ) {
                 return null;
               }
               const notificationDay = new Date(notification.createdAt);

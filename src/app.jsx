@@ -455,6 +455,7 @@ function BackgroundService({ isLoggedIn }) {
   // - WebSocket to receive notifications when page is visible
   const [visible, setVisible] = useState(true);
   usePageVisibility(setVisible);
+  const snapStates = useSnapshot(states);
   const notificationStream = useRef();
   useEffect(() => {
     if (isLoggedIn && visible) {
@@ -465,6 +466,7 @@ function BackgroundService({ isLoggedIn }) {
           const notificationsIterator = masto.v1.notifications.list({
             limit: 1,
             since_id: states.notificationsLast.id,
+            types: snapStates.settings.onlyMentions ? ['mention'] : undefined,
           });
           const { value: notifications } = await notificationsIterator.next();
           if (notifications?.length) {
@@ -488,7 +490,12 @@ function BackgroundService({ isLoggedIn }) {
               skipThreading: true,
             });
           }
-          states.notificationsShowNew = true;
+          if (
+            !snapStates.settings.onlyMentions ||
+            notification.type === 'mention'
+          ) {
+            states.notificationsShowNew = true;
+          }
         });
 
         notificationStream.current.ws.onclose = () => {
@@ -502,7 +509,7 @@ function BackgroundService({ isLoggedIn }) {
         notificationStream.current = null;
       }
     };
-  }, [visible, isLoggedIn]);
+  }, [visible, isLoggedIn, snapStates.settings.onlyMentions]);
 
   // Check for updates service
   const lastCheckDate = useRef();
