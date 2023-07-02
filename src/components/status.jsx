@@ -336,13 +336,13 @@ function Status({
         const hasNoDescriptions = mediaAttachments.some(
           (attachment) => !attachment.description?.trim?.(),
         );
-        let confirmText = 'Boost this post?';
         if (hasNoDescriptions) {
-          confirmText += '\n\n⚠️ Some media have no descriptions.';
-        }
-        const yes = confirm(confirmText);
-        if (!yes) {
-          return false;
+          const yes = confirm(
+            'Boost this post?\n\n⚠️ Some media have no descriptions.',
+          );
+          if (!yes) {
+            return false;
+          }
         }
       }
       // Optimistic
